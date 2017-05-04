@@ -1,0 +1,12 @@
+{
+  "people": [
+    {
+      "name": "John",
+      "online": true
+    },
+    {
+      "name": "Adam",
+      "online": false
+    }
+  ]
+}
