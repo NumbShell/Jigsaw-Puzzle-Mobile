@@ -88,6 +88,7 @@
 $(document).ready(function(){
 
     document.getElementById("finished").style.display = "none";
+    document.getElementById("code").style.display = "none";
 
     var grids = new Array(); //An array of elements belonging to the grid class
     var pieces = new Array(); //An array of elements belonging to the pieces class
@@ -135,21 +136,24 @@ $(document).ready(function(){
        var randomIntegers = randomArray(pieces.length);
 
        for(i = 0; i < pieces.length; i++) {
-          pieces[i].style.backgroundImage = "url(images/dk" + randomIntegers[i] + ".jpg)";
-          pieces[i].style.backgroundSize = "contain";
-          pieces[i].style.backgroundRepeat = "no-repeat";
-          pieces[i].style.top  =  getStyle(pieces[i],"top");
-          pieces[i].style.left  =  getStyle(pieces[i],"left");
-          pieces[i].style.width  =  getStyle(pieces[i],"width");
-          pieces[i].style.height  =  getStyle(pieces[i],"height");
+           value = randomIntegers[i];
 
-          pieces[i].style.cursor = "pointer";
+           pieces[i].style.backgroundImage = "url(images/" + value + ".jpg)";
+           pieces[i].style.backgroundSize = "contain";
+           pieces[i].style.backgroundRepeat = "no-repeat";
+           pieces[i].style.top  =  getStyle(pieces[i],"top");
+           pieces[i].style.left  =  getStyle(pieces[i],"left");
+           pieces[i].style.width  =  getStyle(pieces[i],"width");
+           pieces[i].style.height  =  getStyle(pieces[i],"height");
 
-          addEvent(pieces[i], "mousedown", mouseGrab, false);
-          pieces[i].addEventListener("touchstart", touchGrab, false);
+           pieces[i].style.cursor = "pointer";
+
+           addEvent(pieces[i], "mousedown", mouseGrab, false);
+           pieces[i].addEventListener("touchstart", touchGrab, false);
        }
 
        for  (var  i  =  0;  i  <  grids.length;  i++)  {
+           grids[i].id = "grid" + i;
           grids[i].style.top  =  getStyle(grids[i],"top");
           grids[i].style.left  =  getStyle(grids[i],"left");
           grids[i].style.width  =  getStyle(grids[i],"width");
@@ -271,13 +275,14 @@ $(document).ready(function(){
             //1. Get image ID
             var imagePiece = pieces[i];
             var image = pieces[i].style.backgroundImage;
+            //console.log(image + ": " + image.length);
             var imageID = null;
-            if(image.length == 22) {
-                imageID = image.slice(14, 16);
-                //console.log(imageID);
+            if(image.length == 20) {
+                imageID = image.slice(12,14);
+                console.log("two numbers: " + imageID);
             }else {
-                imageID = image.slice(14, 15);
-                //console.log(imageID);
+                imageID = image.slice(12,13);
+                console.log("one number: " + imageID);
             }
 
             //2. Test imageID against all grid ID's
@@ -285,6 +290,7 @@ $(document).ready(function(){
                 //3. Get grid ID
                 var gridPiece = grids[j];
                 var grid = grids[j].id;
+                //console.log("grid: " + grid);
                 var gridID = grid.slice(4);
 
                 if(imageID == gridID) {
@@ -292,11 +298,13 @@ $(document).ready(function(){
 
                     if(imagePiece.style.left == gridPiece.style.left && imagePiece.style.top == gridPiece.style.top) {
                         count++;
-                        if(count == 25) {
+                        if(count == 16) {
                             //puzzleFinished();
                             document.getElementById("finished").style.display = "block";
+                            document.getElementById("code").style.display = "block";
                         }
                     }
+                    console.log("COUNT: " + count);
                 }
             }
         }
@@ -339,6 +347,7 @@ $(document).ready(function(){
        var evt = e|| window.event;
        mousePiece = evt.target || evt.srcElement;
        maxZ ++;
+       console.log(mousePiece.style.backgroundImage);
 
        //Remove piece from array and stop animation
         $(mousePiece).stop();
