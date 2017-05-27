@@ -1,5 +1,5 @@
 /*
-   
+
    Global Variables List;
 
    grids
@@ -10,7 +10,7 @@
 
    mousePiece
       The puzzle piece currently selected by the user's mouse
-   
+
    keyPiece
       The puzzle piece currently selected by the user's keyboard
 
@@ -36,15 +36,8 @@
       The grid square that the moving puzzle piece is currently hovered over
 
 
-   
+
    Functions List:
-
-   jumbleIt()
-      Reloads the current Web page, thus re-arranging the puzzle
-
-   solveIt()
-      Places the puzzle images in the current order as background images
-      for the grid squares
 
    init()
       Sets up and initializes the Web page, defining the grid and pieces array,
@@ -85,6 +78,13 @@
 
 */
 
+
+
+
+/*
+ Written by Gavin Macken and Simon Gruber.
+ */
+
 $(document).ready(function(){
 
     document.getElementById("finished").style.display = "none";
@@ -121,7 +121,10 @@ $(document).ready(function(){
 
 
 
-    /* S , ets up and initializes the Web page, defining the grid and pieces array,
+    /* init()
+        Written by Gavin Macken and modified by Simon Gruber.
+
+        Setup and initializes the Web page, defining the grid and pieces array,
           and applying event handlers to mouse and keyboard actions
     */
     function init() {
@@ -167,10 +170,11 @@ $(document).ready(function(){
        animateDiv();
     }
 
-    function message() {
-        console.log("Touched a piece.");
-    }
+    /*touchGrab(e)
+        Written by Simon Gruber.
 
+        Handles the grab event for mobile.
+     */
     function touchGrab(e) {
         console.log("touchGrab");
         //var mouseGrabbed = true;
@@ -185,8 +189,6 @@ $(document).ready(function(){
         $(mousePiece).stop(true);
 
         //Loop through an array with all removed pieces and assign a stop() to them
-        // I think the updating of the animate array is a bit slow so it doesn't always apply when you click the piece
-
         mousePiece.style.zIndex = maxZ; // Place the piece above other objects
 
         mousePiece.style.cursor = "move";
@@ -205,12 +207,13 @@ $(document).ready(function(){
         //Add mobile events
         mousePiece.addEventListener("touchmove", touchMove, false);
         mousePiece.addEventListener("touchend", touchDrop, false);
-
-        //if(mouseGrabbed) {
-        //addEvent(document, "mousedown", mouseDrop, false);
-        //}
     }
 
+    /*touchMove(e)
+        Written by Simon Gruber.
+
+        Handles the move event for mobile.
+     */
     function  touchMove(e)  {
         console.log("touchMove");
 
@@ -223,6 +226,11 @@ $(document).ready(function(){
         highlightGrid(mousePiece);
     }
 
+    /*touchDrop(e)
+        Written by Simon Gruber.
+
+        Handles the drop event for mobile.
+     */
     function  touchDrop(e)  {
         console.log("touchDrop");
 
@@ -241,7 +249,9 @@ $(document).ready(function(){
         }
     }
 
-
+    /*keyGrab(e)
+          Written by Gavin Macken.
+     */
     function  keyGrab(e)  {
        var  evt  =  e  ||  window.event;
        if  (evt.keyCode  ==  32)  {toggleMode(); return false}
@@ -253,6 +263,8 @@ $(document).ready(function(){
 
 
     /* dropValid(object)
+          Written by Gavin Macken.
+
           Returns a Boolean value indicating whether it valid to drop the object. The function
           is false if dropping object will cover a puzzle piece and true if otherwise
     */
@@ -265,7 +277,8 @@ $(document).ready(function(){
 
 
     /*solvedCheck()
-            Author: Simon Gruber
+            Written by Simon Gruber.
+
             Retrive each piece image and compare the image ID to grid ID.
      */
     function solvedCheck() {
@@ -279,10 +292,8 @@ $(document).ready(function(){
             var imageID = null;
             if(image.length == 20) {
                 imageID = image.slice(12,14);
-                console.log("two numbers: " + imageID);
             }else {
                 imageID = image.slice(12,13);
-                console.log("one number: " + imageID);
             }
 
             //2. Test imageID against all grid ID's
@@ -290,7 +301,6 @@ $(document).ready(function(){
                 //3. Get grid ID
                 var gridPiece = grids[j];
                 var grid = grids[j].id;
-                //console.log("grid: " + grid);
                 var gridID = grid.slice(4);
 
                 if(imageID == gridID) {
@@ -304,13 +314,14 @@ $(document).ready(function(){
                             document.getElementById("code").style.display = "block";
                         }
                     }
-                    console.log("COUNT: " + count);
                 }
             }
         }
     }
 
     /* alignPiece(object)
+            Written by Gavin Macken.
+
             If object is over a grid square, aligns object with the top-left corner of the square
      */
     function alignPiece(object) {
@@ -324,6 +335,8 @@ $(document).ready(function(){
     }
 
     /*highlightGrid(object)
+          Written by Gavin Macken.
+
           If object is over a grid square, sets the background color of the square to light green
     */
     function highlightGrid(object) {
@@ -339,6 +352,8 @@ $(document).ready(function(){
     }
 
     /* mouseGrab(e)
+          Written by Gavin Macken and modified by Simon Gruber.
+
           "Grabs" a puzzle piece using the mousedown action. Sets the value of mousePiece. Calculates
           the value of diffX and diffY. Applies event handlers for mousemove and mouseup events
     */
@@ -347,10 +362,8 @@ $(document).ready(function(){
        var evt = e|| window.event;
        mousePiece = evt.target || evt.srcElement;
        maxZ ++;
-       console.log(mousePiece.style.backgroundImage);
 
        //Remove piece from array and stop animation
-        $(mousePiece).stop();
         var index = movingPieces.indexOf(mousePiece);
         movingPieces.splice(index, 1);
         $(mousePiece).stop(true);
@@ -379,6 +392,8 @@ $(document).ready(function(){
     }
 
     /* mouseMove(e)
+          Written by Gavin Macken.
+
           Move mousePiece across the Web page, keeping a constant distance from the mouse pointer
     */
     function  mouseMove(e)  {
@@ -393,6 +408,8 @@ $(document).ready(function(){
     }
 
     /* mouseDrop(e)
+          Written by Gavin Macken.
+
           Drops mousePiece on the Web page (if it is not over another puzzle piece). Aligns the
           piece with the grid. Turns off event handlers for the mousemove and mouseup events.
     */
@@ -427,6 +444,8 @@ $(document).ready(function(){
     }
 
     /*animateDiv()
+            Written by Unknown and modified by Simon Gruber.
+
             set new position from makeNewPosition
             set old position equal to the coordinates of the element relative to the document
      */
@@ -444,7 +463,9 @@ $(document).ready(function(){
             }
     };
 
-    /*calcSpeed(prevv, next)
+    /*calcSpeed(prev, next)
+            Written by Gavin Macken.
+
             calculate speed based on old and new position
      */
     function calcSpeed(prev, next) {
@@ -465,24 +486,5 @@ $(document).ready(function(){
         }
         return speed;
 
-    }
-
-    function puzzleFinished() {
-        console.log("Puzzle Finished");
-        //1. Make JSON data
-        //2. Console.log it for now
-        //3. Later try and upload it to a web server
-        //so Unity can retrieve it.
-
-        var obj = {
-            finished: [
-                {
-                    done: true,
-                }
-            ]
-        };
-
-        var string = JSON.stringify(obj);
-        console.log(string);
     }
 });
